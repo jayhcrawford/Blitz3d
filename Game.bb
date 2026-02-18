@@ -12,12 +12,12 @@ Const TYPE_ENEMY  = 3
 
 ; ---------- PLAYER ----------
 player = CreatePivot()
-PositionEntity player, 0,3,0
+PositionEntity player, 0,1,0
 EntityType player, TYPE_PLAYER
 EntityRadius player, 0.4,1.0
 
 camera = CreateCamera(player)
-PositionEntity camera, 0,1.6,0
+PositionEntity camera, 0,0.6,0
 CameraRange camera,0.1,1000
 
 ; ---------- LIGHT ----------
