@@ -1,0 +1,79 @@
+Graphics3D 1024,768,32,2
+SetBuffer BackBuffer()
+
+; --- Collision Types ---
+Const TYPE_PLAYER = 1
+Const TYPE_WORLD  = 2
+
+; --- Camera ---
+camera = CreateCamera()
+CameraRange camera, 0.1, 1000
+
+light = CreateLight()
+
+; --- Player Pivot (for movement + collision) ---
+player = CreatePivot()
+PositionEntity player,0,2,0
+EntityRadius player,0.5,1
+EntityType player, TYPE_PLAYER
+
+; --- Visible Player Mesh ---
+playerMesh = CreateCube()
+ScaleEntity playerMesh,0.5,1,0.5
+EntityParent playerMesh, player
+
+; --- Ground ---
+ground = CreatePlane()
+ScaleEntity ground,50,1,50
+EntityType ground, TYPE_WORLD
+
+; --- Collision Setup ---
+Collisions TYPE_PLAYER, TYPE_WORLD, 2, 2
+
+; --- Camera Settings ---
+camDistance# = 6
+camHeight# = 2
+camSmooth# = 0.1
+
+; --- Gravity ---
+gravity# = 0.02
+yVel# = 0
+
+; --- Main Loop ---
+While Not KeyHit(1)
+
+    ; --- Movement ---
+    If KeyDown(30) Then TurnEntity player,0,-2,0 ; A
+    If KeyDown(32) Then TurnEntity player,0,2,0  ; D
+    
+    If KeyDown(17) Then MoveEntity player,0,0,0.1 ; W
+    If KeyDown(31) Then MoveEntity player,0,0,-0.05 ; S
+
+    ; --- Gravity ---
+    yVel# = yVel# - gravity#
+    MoveEntity player,0,yVel#,0
+    
+    If EntityCollided(player, TYPE_WORLD)
+        yVel# = 0
+    EndIf
+
+    ; --- Camera Follow ---
+    targetX# = EntityX(player) - Sin(EntityYaw(player)) * camDistance#
+    targetZ# = EntityZ(player) - Cos(EntityYaw(player)) * camDistance#
+    targetY# = EntityY(player) + camHeight#
+    
+    camX# = EntityX(camera)
+    camY# = EntityY(camera)
+    camZ# = EntityZ(camera)
+    
+		PositionEntity camera, camX# + (targetX# - camX#) * camSmooth#, camY# + (targetY# - camY#) * camSmooth#, camZ# + (targetZ# - camZ#) * camSmooth#
+    
+    PointEntity camera, player
+
+    UpdateWorld
+    RenderWorld
+    Flip
+
+Wend
+
+End
