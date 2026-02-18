@@ -13,14 +13,14 @@ light = CreateLight()
 
 ; --- Player Pivot (for movement + collision) ---
 player = CreatePivot()
-PositionEntity player,0,2,0
+PositionEntity player,0,1,0
 EntityRadius player,0.5,1
 EntityType player, TYPE_PLAYER
 
 
 ; --- Visible Player Mesh ---
 playerMesh = CreateCube()
-ScaleEntity playerMesh,0.5,1,0.5
+ScaleEntity playerMesh,0.5,0.5,0.5
 EntityParent playerMesh, player
 EntityColor playerMesh,255,0,0
 
