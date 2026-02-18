@@ -1,98 +1,122 @@
-; =========================
-; BASIC 3D SHOOTER - BLITZ3D
-; =========================
+; ===============================
+; CLEAN BASIC 3D SHOOTER
+; ===============================
 
 Graphics3D 800,600,32,2
 SetBuffer BackBuffer()
 
-; --- Player & Camera ---
+; ---------- CONSTANTS ----------
+Const TYPE_PLAYER = 1
+Const TYPE_WORLD  = 2
+Const TYPE_ENEMY  = 3
+
+; ---------- PLAYER ----------
 player = CreatePivot()
-PositionEntity player, 0,2,0
+PositionEntity player, 0,3,0
+EntityType player, TYPE_PLAYER
+EntityRadius player, 0.4,1.0
 
 camera = CreateCamera(player)
-PositionEntity camera, 0,0,0
-CameraRange camera, 0.1, 1000
+PositionEntity camera, 0,1.6,0
+CameraRange camera,0.1,1000
 
-; --- Light ---
+; ---------- LIGHT ----------
 light = CreateLight()
-RotateEntity light, 45,45,0
+RotateEntity light,45,45,0
 
-; --- Ground ---
+; ---------- GROUND ----------
 ground = CreatePlane()
-EntityColor ground, 50,150,50
-EntityType ground, 2
-EntityPickMode ground, 2
+EntityColor ground,50,150,50
+EntityType ground,TYPE_WORLD
+EntityPickMode ground,2
 
-; --- Player Settings ---
-playerSpeed# = 0.2
+; ---------- COLLISIONS ----------
+Collisions TYPE_PLAYER, TYPE_WORLD, 2,2
+Collisions TYPE_PLAYER, TYPE_ENEMY, 2,2
+
+; ---------- PLAYER SETTINGS ----------
+speed# = 0.25
+gravity# = 0.1
 mouseSpeed# = 0.2
-gravity# = 0.15
-playerPitch# = 0
+pitch# = 0
 HidePointer()
 
-; --- Enemy Type ---
+; ---------- ENEMY TYPE ----------
 Type Enemy
     Field entity
 End Type
 
-; --- Create Enemies ---
+; ---------- CREATE ENEMIES ----------
 For i = 1 To 10
     e.Enemy = New Enemy
     e\entity = CreateCube()
-    PositionEntity e\entity, Rnd(-20,20),1,Rnd(5,40)
-    EntityColor e\entity, 200,50,50
-    EntityPickMode e\entity, 2
+    PositionEntity e\entity,Rnd(-20,20),1,Rnd(10,40)
+    EntityColor e\entity,200,50,50
+    EntityType e\entity,TYPE_ENEMY
+    EntityPickMode e\entity,2
 Next
 
-; --- Collision Setup ---
-EntityType player, 1
-EntityRadius player, 0.4, 1.8
-Collisions 1,2,2,2
+; ---------- MAIN LOOP ----------
+While Not KeyHit(1)
 
-; --- Main Game Loop ---
-While Not KeyHit(1) ; ESC to quit
-
-    ; Mouse Look (yaw on player, pitch on camera)
-    mxs# = MouseXSpeed() * mouseSpeed#
-    mys# = MouseYSpeed() * mouseSpeed#
-    TurnEntity player, 0, -mxs#, 0
-    playerPitch# = playerPitch# + mys#
-    If playerPitch# > 80 Then playerPitch# = 80
-    If playerPitch# < -80 Then playerPitch# = -80
-    RotateEntity camera, playerPitch#, 0, 0
+    ; ---- Mouse Look ----
+    mx# = MouseXSpeed()*mouseSpeed#
+    my# = MouseYSpeed()*mouseSpeed#
     
-    ; WASD Movement
-    If KeyDown(17) Then MoveEntity player,0,0,playerSpeed# ; W
-    If KeyDown(31) Then MoveEntity player,0,0,-playerSpeed# ; S
-    If KeyDown(30) Then MoveEntity player,-playerSpeed#,0,0 ; A
-    If KeyDown(32) Then MoveEntity player,playerSpeed#,0,0 ; D
-
-    ; Gravity to keep player grounded
-    MoveEntity player, 0, -gravity#, 0
+    TurnEntity player,0,-mx#,0
     
-    ; Shooting
+    pitch# = pitch# + my#
+    If pitch# > 80 Then pitch# = 80
+    If pitch# < -80 Then pitch# = -80
+    RotateEntity camera,pitch#,0,0
+
+    ; ---- Movement ----
+    If KeyDown(17) Then MoveEntity player,0,0,speed#
+    If KeyDown(31) Then MoveEntity player,0,0,-speed#
+    If KeyDown(30) Then MoveEntity player,-speed#,0,0
+    If KeyDown(32) Then MoveEntity player,speed#,0,0
+
+    ; ---- Gravity ----
+    MoveEntity player,0,-gravity#,0
+
+    ; ---- Shooting ----
     If MouseHit(1)
-        picked = CameraPick(camera, GraphicsWidth()/2, GraphicsHeight()/2)
+    
+        ; draw quick flash line
+        picked = CameraPick(camera,GraphicsWidth()/2,GraphicsHeight()/2)
+        
         If picked <> 0
+            
             For e.Enemy = Each Enemy
                 If e\entity = picked
+                    
+                    ; visual feedback
+                    EntityColor e\entity,255,255,0
                     FreeEntity e\entity
                     Delete e
                     Exit
+                    
                 EndIf
             Next
+            
         EndIf
     EndIf
-    
+
     UpdateWorld
     RenderWorld
     
-    Text 10,10,"WASD to move"
-    Text 10,25,"Mouse to look"
-    Text 10,40,"Left Click to shoot"
-    Text 10,55,"ESC to quit"
-    
+    ; ---- Crosshair ----
+    Color 255,255,255
+    Line GraphicsWidth()/2-5,GraphicsHeight()/2,GraphicsWidth()/2+5,GraphicsHeight()/2
+    Line GraphicsWidth()/2,GraphicsHeight()/2-5,GraphicsWidth()/2,GraphicsHeight()/2+5
+
+    Text 10,10,"WASD Move"
+    Text 10,25,"Mouse Look"
+    Text 10,40,"Click Shoot"
+    Text 10,55,"ESC Quit"
+
     Flip
+
 Wend
 
 End
