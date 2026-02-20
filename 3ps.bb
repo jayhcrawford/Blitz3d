@@ -18,6 +18,8 @@ EntityRadius player,0.5,1
 EntityType player, TYPE_PLAYER
 
 
+
+
 ; --- Visible Player Mesh ---
 playerMesh = CreateCube()
 ScaleEntity playerMesh,0.5,0.5,0.5
@@ -28,6 +30,25 @@ EntityColor playerMesh,255,0,0
 ground = CreatePlane()
 ScaleEntity ground,50,1,50
 EntityType ground, TYPE_WORLD
+
+; --- Create Checker Texture ---
+texSize = 256
+checkerTex = CreateTexture(texSize, texSize)
+
+SetBuffer TextureBuffer(checkerTex)
+
+Color 255,255,255
+Rect 0,0,texSize/2,texSize/2,True
+Rect texSize/2,texSize/2,texSize/2,texSize/2,True
+
+Color 0,0,0
+Rect texSize/2,0,texSize/2,texSize/2,True
+Rect 0,texSize/2,texSize/2,texSize/2,True
+
+SetBuffer BackBuffer()
+
+EntityTexture ground, checkerTex
+ScaleTexture checkerTex, 20,20
 
 ; --- Collision Setup ---
 Collisions TYPE_PLAYER, TYPE_WORLD, 2, 2
@@ -46,11 +67,11 @@ groundY# = 1 ; Height of ground plane center
 While Not KeyHit(1)
 
     ; --- Movement ---
-    If KeyDown(30) Then TurnEntity player,0,-2,0 ; A
-    If KeyDown(32) Then TurnEntity player,0,2,0  ; D
+    If KeyDown(32) Then TurnEntity player,0,-2,0 ; D
+    If KeyDown(30) Then TurnEntity player,0,2,0  ; A
     
-    If KeyDown(17) Then MoveEntity player,0,0,0.1 ; W
-    If KeyDown(31) Then MoveEntity player,0,0,-0.05 ; S
+    If KeyDown(17) Then MoveEntity player,0.1,0,0 ; W
+    If KeyDown(31) Then MoveEntity player,-0.05,0,0 ; S
 
     ; --- Gravity ---
     yVel# = yVel# - gravity#
@@ -62,8 +83,8 @@ While Not KeyHit(1)
     EndIf
 
     ; --- Camera Follow ---
-    targetX# = EntityX(player) - Sin(EntityYaw(player)) * camDistance#
-    targetZ# = EntityZ(player) - Cos(EntityYaw(player)) * camDistance#
+    targetX# = EntityX(player) - Cos(EntityYaw(player)) * camDistance#
+    targetZ# = EntityZ(player) - Sin(EntityYaw(player)) * camDistance#
     targetY# = EntityY(player) + camHeight#
     
     camX# = EntityX(camera)
