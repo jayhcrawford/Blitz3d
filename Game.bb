@@ -88,8 +88,8 @@ While Not KeyHit(1)
         If picked <> 0
             
             For e.Enemy = Each Enemy
-                If e\entity = picked
-                    
+                                    If e\entity = picked
+
                     ; visual feedback
                     EntityColor e\entity,255,255,0
                     FreeEntity e\entity

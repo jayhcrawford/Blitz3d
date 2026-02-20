@@ -1,0 +1,14 @@
+{
+  "name": "blitz3d",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "blitz": "start \"\" \"C:\\Program Files (x86)\\Blitz3D\\Blitz3D.exe\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
