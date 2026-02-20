@@ -25,7 +25,7 @@ light = CreateLight(1)
 
 ; --- Visible Player Mesh ---
 ;playerMesh = CreateCube() 
-Global playerMesh = loadMesh("Baked_Swat_guy.3ds")
+Global playerMesh = LoadMD2("Baked_Swat_guy_Animated.md2")
 
 Print AnimLength(playerMesh)
 ;DebugLog CountFrames(playerMesh)
@@ -77,14 +77,8 @@ camSmooth# = 0.1
 gravity# = 0.02
 yVel# = 0
 groundY# = 1 ; Height of ground plane center'
-Global currentAnim = 0 ; Initialize animation state
+Global currentAnim = 0 ; Initialize animation stat
 
-If AnimLength(playerMesh) > 0 Then
-    Animate playerMesh, 0
-    SetAnimTime playerMesh, 47
-Else
-    RuntimeError "Mesh has no baked animation frames!"
-EndIf
 
 ; --- Animation Data ---
 
