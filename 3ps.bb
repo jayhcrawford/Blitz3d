@@ -36,7 +36,7 @@ Global animWalkSeq = ExtractAnimSeq(playerMesh,181,222)
 Global animBWWalkSeq = ExtractAnimSeq(playerMesh,223,264)
 Global animIdleSeq = ExtractAnimSeq(playerMesh,1,180)
 Global currentAnimSeq = animIdleSeq
-Animate playerMesh,1,0.1,currentAnimSeq
+Animate playerMesh,.01,0.01,currentAnimSeq
 
 ; --- Visible Player Mesh ---
 ;playerMesh = CreateCube()
@@ -79,7 +79,7 @@ camSmooth# = 0.1
 ; --- Gravity ---
 gravity# = 0.02
 yVel# = 0
-groundY# = 1 ; Height of ground plane center
+groundY# = 0.5 ; Height of ground plane center
 
 ; --- Main Loop ---
 While Not KeyHit(1)
