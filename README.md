@@ -8,7 +8,7 @@ I am taking a video game programming class. Here are some of my experiments in B
 https://youtu.be/q3g6t6aD_wA
 
 
-## Animation Flow
+## Animation Pipeline
 Blitz Basic handles animation by playing select frames from a 3D file format which also includes animation information. 
 
 We need a file of an animated mesh
