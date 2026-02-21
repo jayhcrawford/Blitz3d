@@ -27,20 +27,20 @@ EntityType player, TYPE_PLAYER
 
  ; --- Visible Player Mesh ---
 ;playerMesh = CreateCube()
-Global playerMesh = LoadAnimMesh("Frag Motion Test 14 Exp.b3d")
+Global playerMesh = LoadAnimMesh("Frag Motion Test 20 Exp.b3d")
 RotateEntity playerMesh, 0, 90, 0
 
 Print AnimLength(playerMesh)
 
-Global animWalkSeq = ExtractAnimSeq(playerMesh,190,231)
-Global animBWWalkSeq = ExtractAnimSeq(playerMesh,232,273)
-Global animIdleSeq = ExtractAnimSeq(playerMesh,1,189)
+Global animWalkSeq = ExtractAnimSeq(playerMesh,181,222)
+Global animBWWalkSeq = ExtractAnimSeq(playerMesh,223,264)
+Global animIdleSeq = ExtractAnimSeq(playerMesh,1,180)
 Global currentAnimSeq = animIdleSeq
 Animate playerMesh,1,0.1,currentAnimSeq
 
 ; --- Visible Player Mesh ---
 ;playerMesh = CreateCube()
-ScaleEntity playerMesh,2.5,2.5,2.5
+ScaleEntity playerMesh,.01,.01,.01
 EntityParent playerMesh, player
 EntityColor playerMesh,255,0,0
 
