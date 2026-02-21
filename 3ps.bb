@@ -27,22 +27,20 @@ EntityType player, TYPE_PLAYER
 
  ; --- Visible Player Mesh ---
 ;playerMesh = CreateCube()
-Global playerMesh = LoadAnimMesh("Frag Motion Test 12.b3d")
+Global playerMesh = LoadAnimMesh("Frag Motion Test 14 Exp.b3d")
 RotateEntity playerMesh, 0, 90, 0
 
 Print AnimLength(playerMesh)
 
-Global animWalkSeq = ExtractAnimSeq(playerMesh,0,41)
-Global animIdleSeq = ExtractAnimSeq(playerMesh,46,225)
+Global animWalkSeq = ExtractAnimSeq(playerMesh,190,231)
+Global animBWWalkSeq = ExtractAnimSeq(playerMesh,232,273)
+Global animIdleSeq = ExtractAnimSeq(playerMesh,1,189)
 Global currentAnimSeq = animIdleSeq
 Animate playerMesh,1,0.1,currentAnimSeq
 
-
-
-
 ; --- Visible Player Mesh ---
 ;playerMesh = CreateCube()
-ScaleEntity playerMesh,1,1,1
+ScaleEntity playerMesh,2.5,2.5,2.5
 EntityParent playerMesh, player
 EntityColor playerMesh,255,0,0
 
@@ -86,7 +84,8 @@ groundY# = 1 ; Height of ground plane center
 ; --- Main Loop ---
 While Not KeyHit(1)
 
-  moving = False
+  movingForward = False
+  movingBackward = False
 
     ; --- Movement ---
     If KeyDown(32) Then TurnEntity player,0,-2,0 ; D
@@ -94,16 +93,21 @@ While Not KeyHit(1)
     
   If KeyDown(17)
     MoveEntity player,0.1,0,0 ; W
-    moving = True
+    movingForward = True
   EndIf
   If KeyDown(31)
     MoveEntity player,-0.05,0,0 ; S
-    moving = True
+    movingBackward = True
   EndIf
 
-  If moving = True
+  If movingForward = True
     If currentAnimSeq <> animWalkSeq
       currentAnimSeq = animWalkSeq
+      Animate playerMesh,1,1,currentAnimSeq,5
+    EndIf
+  ElseIf movingBackward = True
+    If currentAnimSeq <> animBWWalkSeq
+      currentAnimSeq = animBWWalkSeq
       Animate playerMesh,1,1,currentAnimSeq,5
     EndIf
   Else
