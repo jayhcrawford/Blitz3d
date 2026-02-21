@@ -92,11 +92,11 @@ While Not KeyHit(1)
     If KeyDown(30) Then TurnEntity player,0,2,0  ; A
     
   If KeyDown(17)
-    MoveEntity player,0.1,0,0 ; W
+    MoveEntity player,0.05,0,0 ; W
     movingForward = True
   EndIf
   If KeyDown(31)
-    MoveEntity player,-0.05,0,0 ; S
+    MoveEntity player,-0.025,0,0 ; S
     movingBackward = True
   EndIf
 
