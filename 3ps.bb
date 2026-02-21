@@ -1,3 +1,5 @@
+; 3ps - A simple 3rd person character controller example in Blitz3D
+
 Graphics3D 1024,768,32,2
 SetBuffer BackBuffer()
 
@@ -49,7 +51,7 @@ ScaleEntity ground,50,1,50
 EntityType ground, TYPE_WORLD
 
 ; --- Create Checker Texture ---
-texSize = 256
+texSize = 512
 checkerTex = CreateTexture(texSize, texSize)
 
 SetBuffer TextureBuffer(checkerTex)
@@ -65,7 +67,7 @@ Rect 0,texSize/2,texSize/2,texSize/2,True
 SetBuffer BackBuffer()
 
 EntityTexture ground, checkerTex
-ScaleTexture checkerTex, 20,20
+ScaleTexture checkerTex, 1,1
 
 ; --- Collision Setup ---
 Collisions TYPE_PLAYER, TYPE_WORLD, 2, 2
