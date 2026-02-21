@@ -2,6 +2,11 @@
 
 I am taking a video game programming class. Here are some of my experiments in Blitz3D
 
+## Working Demos
+
+**Third Person Template.bb** here: 
+https://youtu.be/q3g6t6aD_wA
+
 
 ## Animation Flow
 Blitz Basic handles animation by playing select frames from a 3D file format which also includes animation information. 
