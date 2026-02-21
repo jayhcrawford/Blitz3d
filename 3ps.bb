@@ -9,37 +9,39 @@ Const TYPE_WORLD  = 2
 camera = CreateCamera()
 CameraRange camera, 0.1, 1000
 
+light = CreateLight()
+
 ; --- Player Pivot (for movement + collision) ---
 player = CreatePivot()
 PositionEntity player,0,1,0
 EntityRadius player,0.5,1
 EntityType player, TYPE_PLAYER
 
-; --- Lights ---
-light = CreateLight(1)
 
 ;light2 = CreateLight()
 ; MoveEntity light2,5,0,0
 ; PointEntity light2,player ; make sure light is pointing at ball
 
 
-; --- Visible Player Mesh ---
-;playerMesh = CreateCube() 
-Global playerMesh = LoadMD2("Baked_Swat_guy_Animated.md2")
+ ; --- Visible Player Mesh ---
+;playerMesh = CreateCube()
+Global playerMesh = LoadAnimMesh("Fragged_Swat_guy.b3d")
 
 Print AnimLength(playerMesh)
-;DebugLog CountFrames(playerMesh)
-ScaleEntity playerMesh,1,1,1
-RotateEntity playerMesh,0,90,0
+
+Global animWalkSeq = ExtractAnimSeq(playerMesh,0,41)
+Global animIdleSeq = ExtractAnimSeq(playerMesh,46,225)
+Global currentAnimSeq = animIdleSeq
+Animate playerMesh,1,0.1,currentAnimSeq
+
+
+
+
+; --- Visible Player Mesh ---
+;playerMesh = CreateCube()
+ScaleEntity playerMesh,0.5,0.5,0.5
 EntityParent playerMesh, player
 EntityColor playerMesh,255,0,0
-
-
-; --- Other Visible Mesh ---
-staticMesh = CreateCube()
-ScaleEntity staticMesh,0.5,10,0.5
-MoveEntity staticMesh,20,0,0
-EntityColor staticMesh,255,0,0
 
 ; --- Ground ---
 ground = CreatePlane()
@@ -76,68 +78,37 @@ camSmooth# = 0.1
 ; --- Gravity ---
 gravity# = 0.02
 yVel# = 0
-groundY# = 1 ; Height of ground plane center'
-Global currentAnim = 0 ; Initialize animation stat
-
-
-; --- Animation Data ---
-
-Const ANIM_IDLE = 0
-Const ANIM_WALK = 1
-Const ANIM_RUN  = 2
-
-Dim animStart(2)
-Dim animEnd(2)
-Dim animSpeed#(2)
-
-animStart(ANIM_IDLE) = 46
-animEnd(ANIM_IDLE)   = 226
-animSpeed(ANIM_IDLE) = 0.1
-
-animStart(ANIM_WALK) = 1
-animEnd(ANIM_WALK)   = 41
-animSpeed(ANIM_WALK) = 0.2
-
-animStart(ANIM_RUN) = 1
-animEnd(ANIM_RUN)   = 41
-animSpeed(ANIM_RUN) = 0.35
-
-
-Function SetAnimation(mesh, anim)
-
-    If anim = currentAnim Then Return
-
-    currentAnim = anim
-
-    Animate mesh, 1, animSpeed(anim), animStart(anim), animEnd(anim)
-
-End Function
+groundY# = 1 ; Height of ground plane center
 
 ; --- Main Loop ---
 While Not KeyHit(1)
 
+  moving = False
+
     ; --- Movement ---
-    isMoving = False
-    
     If KeyDown(32) Then TurnEntity player,0,-2,0 ; D
     If KeyDown(30) Then TurnEntity player,0,2,0  ; A
     
-    If KeyDown(17)
-        MoveEntity player,0.1,0,0 ; W
-        isMoving = True
-    EndIf
-    
-    If KeyDown(31)
-        MoveEntity player,-0.05,0,0 ; S
-        isMoving = True
-    EndIf
+  If KeyDown(17)
+    MoveEntity player,0.1,0,0 ; W
+    moving = True
+  EndIf
+  If KeyDown(31)
+    MoveEntity player,-0.05,0,0 ; S
+    moving = True
+  EndIf
 
-    ; --- Animation Control ---
-    If isMoving
-        SetAnimation(playerMesh, ANIM_WALK)
-    Else
-        SetAnimation(playerMesh,ANIM_IDLE)
+  If moving = True
+    If currentAnimSeq <> animWalkSeq
+      currentAnimSeq = animWalkSeq
+      Animate playerMesh,1,0.2,currentAnimSeq,5
     EndIf
+  Else
+    If currentAnimSeq <> animIdleSeq
+      currentAnimSeq = animIdleSeq
+      Animate playerMesh,1,0.1,currentAnimSeq,5
+    EndIf
+  EndIf
 
     ; --- Gravity ---
     yVel# = yVel# - gravity#
