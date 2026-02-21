@@ -27,7 +27,8 @@ EntityType player, TYPE_PLAYER
 
  ; --- Visible Player Mesh ---
 ;playerMesh = CreateCube()
-Global playerMesh = LoadAnimMesh("Fragged_Swat_guy.b3d")
+Global playerMesh = LoadAnimMesh("Frag Motion Test 12.b3d")
+RotateEntity playerMesh, 0, 90, 0
 
 Print AnimLength(playerMesh)
 
@@ -41,7 +42,7 @@ Animate playerMesh,1,0.1,currentAnimSeq
 
 ; --- Visible Player Mesh ---
 ;playerMesh = CreateCube()
-ScaleEntity playerMesh,0.5,0.5,0.5
+ScaleEntity playerMesh,1,1,1
 EntityParent playerMesh, player
 EntityColor playerMesh,255,0,0
 
@@ -103,7 +104,7 @@ While Not KeyHit(1)
   If moving = True
     If currentAnimSeq <> animWalkSeq
       currentAnimSeq = animWalkSeq
-      Animate playerMesh,1,0.2,currentAnimSeq,5
+      Animate playerMesh,1,1,currentAnimSeq,5
     EndIf
   Else
     If currentAnimSeq <> animIdleSeq
