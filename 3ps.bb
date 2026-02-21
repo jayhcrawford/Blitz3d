@@ -27,7 +27,7 @@ EntityType player, TYPE_PLAYER
 
  ; --- Visible Player Mesh ---
 ;playerMesh = CreateCube()
-Global playerMesh = LoadAnimMesh("Frag Motion Test 20 Exp.b3d")
+Global playerMesh = LoadAnimMesh("SWAT Animated.b3d")
 RotateEntity playerMesh, 0, 90, 0
 
 Print AnimLength(playerMesh)
