@@ -1,4 +1,5 @@
-; 3ps - A simple 3rd person character controller example in Blitz3D
+; A simple 3rd person character controller example in Blitz3D
+; Scales and Transforms written here may need to be adjusted for different models
 
 Graphics3D 1024,768,32,2
 SetBuffer BackBuffer()
