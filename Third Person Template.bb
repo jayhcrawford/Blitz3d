@@ -4,6 +4,12 @@
 Graphics3D 1024,768,32,2
 SetBuffer BackBuffer()
 
+Const STATE_SPLASH = 0
+Const STATE_MENU   = 1
+Const STATE_GAME   = 2
+
+Global gameState = STATE_SPLASH
+
 ; --- Collision Types ---
 Const TYPE_PLAYER = 1
 Const TYPE_WORLD  = 2
@@ -85,64 +91,79 @@ groundY# = 0.5 ; Height of ground plane center
 ; --- Main Loop ---
 While Not KeyHit(1)
 
-  movingForward = False
-  movingBackward = False
+  Select gameState
+    Case STATE_SPLASH
+      ; --- Splash Screen ---
+      menu = LoadImage("Menu Test 2.png")
+      DrawImage menu, 0, 0
+      ResizeImage menu, 0.01, 0.01
+      Flip
+      WaitKey
+      gameState = STATE_GAME
+    Case STATE_MENU
+      ; --- Menu Logic Here ---
+      gameState = STATE_GAME
+    Case STATE_GAME
+      ; --- Game Logic ---
+      movingForward = False
+      movingBackward = False
 
-    ; --- Movement ---
-    If KeyDown(32) Then TurnEntity player,0,-2,0 ; D
-    If KeyDown(30) Then TurnEntity player,0,2,0  ; A
-    
-  If KeyDown(17)
-    MoveEntity player,0.05,0,0 ; W
-    movingForward = True
-  EndIf
-  If KeyDown(31)
-    MoveEntity player,-0.025,0,0 ; S
-    movingBackward = True
-  EndIf
+        ; --- Movement ---
+        If KeyDown(32) Then TurnEntity player,0,-2,0 ; D
+        If KeyDown(30) Then TurnEntity player,0,2,0  ; A
+        
+      If KeyDown(17)
+        MoveEntity player,0.05,0,0 ; W
+        movingForward = True
+      EndIf
+      If KeyDown(31)
+        MoveEntity player,-0.025,0,0 ; S
+        movingBackward = True
+      EndIf
 
-  If movingForward = True
-    If currentAnimSeq <> animWalkSeq
-      currentAnimSeq = animWalkSeq
-      Animate playerMesh,1,1,currentAnimSeq,5
-    EndIf
-  ElseIf movingBackward = True
-    If currentAnimSeq <> animBWWalkSeq
-      currentAnimSeq = animBWWalkSeq
-      Animate playerMesh,1,1,currentAnimSeq,5
-    EndIf
-  Else
-    If currentAnimSeq <> animIdleSeq
-      currentAnimSeq = animIdleSeq
-      Animate playerMesh,1,0.1,currentAnimSeq,5
-    EndIf
-  EndIf
+      If movingForward = True
+        If currentAnimSeq <> animWalkSeq
+          currentAnimSeq = animWalkSeq
+          Animate playerMesh,1,1,currentAnimSeq,5
+        EndIf
+      ElseIf movingBackward = True
+        If currentAnimSeq <> animBWWalkSeq
+          currentAnimSeq = animBWWalkSeq
+          Animate playerMesh,1,1,currentAnimSeq,5
+        EndIf
+      Else
+        If currentAnimSeq <> animIdleSeq
+          currentAnimSeq = animIdleSeq
+          Animate playerMesh,1,0.1,currentAnimSeq,5
+        EndIf
+      EndIf
 
-    ; --- Gravity ---
-    yVel# = yVel# - gravity#
-    MoveEntity player,0,yVel#,0
-    
-    If EntityY(player) < groundY# + 0.5
-        yVel# = 0
-        PositionEntity player, EntityX(player), groundY# + 0.5, EntityZ(player)
-    EndIf
+        ; --- Gravity ---
+        yVel# = yVel# - gravity#
+        MoveEntity player,0,yVel#,0
+        
+        If EntityY(player) < groundY# + 0.5
+            yVel# = 0
+            PositionEntity player, EntityX(player), groundY# + 0.5, EntityZ(player)
+        EndIf
 
-    ; --- Camera Follow ---
-    targetX# = EntityX(player) - Cos(EntityYaw(player)) * camDistance#
-    targetZ# = EntityZ(player) - Sin(EntityYaw(player)) * camDistance#
-    targetY# = EntityY(player) + camHeight#
-    
-    camX# = EntityX(camera)
-    camY# = EntityY(camera)
-    camZ# = EntityZ(camera)
-    
-		PositionEntity camera, camX# + (targetX# - camX#) * camSmooth#, camY# + (targetY# - camY#) * camSmooth#, camZ# + (targetZ# - camZ#) * camSmooth#
-    
-    PointEntity camera, player
+        ; --- Camera Follow ---
+        targetX# = EntityX(player) - Cos(EntityYaw(player)) * camDistance#
+        targetZ# = EntityZ(player) - Sin(EntityYaw(player)) * camDistance#
+        targetY# = EntityY(player) + camHeight#
+        
+        camX# = EntityX(camera)
+        camY# = EntityY(camera)
+        camZ# = EntityZ(camera)
+        
+        PositionEntity camera, camX# + (targetX# - camX#) * camSmooth#, camY# + (targetY# - camY#) * camSmooth#, camZ# + (targetZ# - camZ#) * camSmooth#
+        
+        PointEntity camera, player
 
-    UpdateWorld
-    RenderWorld
-    Flip
+        UpdateWorld
+        RenderWorld
+        Flip
+      End Select
 
 Wend
 
